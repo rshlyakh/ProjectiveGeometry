@@ -16,7 +16,7 @@ Axiom 3: There exist three non-collinear points.
 
 In this development, the axioms of an affine plane are first stated formally. Then, for each axiom, a function is written that takes in a "PointsAndLines" structure and _computes_ whether or not the axiom holds for this structure. Equivalence is then proved between the abstract definitions of the axioms and the computable functions that check their validity. That is, we prove that for any structure, a given axiom holds if and only if the corresponding computable function outputs "true" on this structure.
 
-To use this program, the user should define an instance of the "PointsAndLines" structure, which consists of Points (a List), Lines (a list of Lines), and a proof that all inputted points and lines are distinct. This latter proof can (generally) be written in one step via "by rw[IsDistinct_equiv]; decide." 
+To use this program, the user should define an instance of the `PointsAndLines` structure, which consists of Points (a List), Lines (a list of Lines), and a proof that all inputted points and lines are distinct. This latter proof can (generally) be written in one step via `by rw[IsDistinct_equiv]; decide.` 
 
 ## Examples:
 
@@ -35,7 +35,7 @@ def FourPointAffinePlane : AffinePlane Nat :=
     isAffine := by rw [IsAffinePlane_equiv]; decide
   }
 ```
-The proof that 'FourPointAffinePlane' satisfies the affine plane axioms takes a single line, thanks to the earlier work. For additional examples, see the end of the `ProjectiveGeometry.lean` file.
+The proof that `FourPointAffinePlane` satisfies the affine plane axioms takes a single line, thanks to the earlier work. For additional examples, see the end of the `ProjectiveGeometry.lean` file.
 
 ## Future Work
 Eventually, I hope to write similar programs that would accomplish the same task for a finite projective plane and a finite projective 3-space.
