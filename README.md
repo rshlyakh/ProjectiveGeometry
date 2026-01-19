@@ -14,7 +14,7 @@ Axiom 3: There exist three non-collinear points.
 
 ## Usage
 
-In this development, the axioms of an affine plane are first stated formally. Then, for each axiom, a function is written that takes in a "PointsAndLines" structure and _computes_ whether or not the axiom holds for this structure. Equivalence is then proved between the abstract mathematical axioms and the computable functions that check their validity.
+In this development, the axioms of an affine plane are first stated formally. Then, for each axiom, a function is written that takes in a "PointsAndLines" structure and _computes_ whether or not the axiom holds for this structure. Equivalence is then proved between the abstract definitions of the axioms and the computable functions that check their validity. That is, we prove that for any structure, a given axiom holds if and only if the corresponding computable function outputs "true" on this structure.
 
 To use this program, the user should define an instance of the "PointsAndLines" structure, which consists of Points (a List), Lines (a list of Lines), and a proof that all inputted points and lines are distinct. This latter proof can be written in one step via "by rw[IsDistinct_equiv]; decide." 
 
