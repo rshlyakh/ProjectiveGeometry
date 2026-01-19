@@ -39,3 +39,6 @@ The proof that `FourPointAffinePlane` satisfies the affine plane axioms takes a 
 
 ## Future Work
 Eventually, I hope to write similar programs that would accomplish the same task for a finite projective plane and a finite projective 3-space.
+
+## Acknowledgements
+I used LeanCopilot for one or two of the simpler proofs. Examples of finite projective planes were drawn from: [Finite Plane Example](https://web.york.cuny.edu/~malk/mycourses/math244/finite-plane-examples.html)
