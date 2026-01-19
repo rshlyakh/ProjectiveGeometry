@@ -1,7 +1,7 @@
-name = "Projective Geometry"
+name = "ProjectiveGeometry"
 version = "0.1.0"
 keywords = ["math"]
-defaultTargets = ["«Projective Geometry»"]
+defaultTargets = ["ProjectiveGeometry"]
 
 [leanOptions]
 pp.unicode.fun = true # pretty-prints `fun a ↦ b`
@@ -14,5 +14,15 @@ name = "mathlib"
 scope = "leanprover-community"
 rev = "v4.27.0-rc1"
 
+[[require]]
+name = "LeanCopilot"
+git = "https://github.com/lean-dojo/LeanCopilot.git"
+rev = "main"
+
+moreLinkArgs = ["-L./.lake/packages/LeanCopilot/.lake/build/lib", "-lctranslate2"]
+
+
 [[lean_lib]]
-name = "«Projective Geometry»"
+name = "«ProjectiveGeometry»"
+
+
