@@ -1,5 +1,7 @@
 import ProjectiveGeometry.Basic
 
+/- TO-DO: Put this in a different file (ProjectiveGeometry is a REALLY bad name)-/
+
 variable {α : Type} [DecidableEq α]
 
 /- HELPER LIST OPERATIONS-/
@@ -102,26 +104,26 @@ P ∈ pl.Points ∧ Q ∈ pl.Points ∧ R ∈ pl.Points ∧ P ≠ Q ∧ Q ≠ R 
 /- AXIOMS -/
 
 /- Given two distinct points P and Q, there is a unique line containing P and Q-/
-def axiom1 (pl : PointsAndLines α) : Prop :=
+def affine_axiom1 (pl : PointsAndLines α) : Prop :=
   let Points := pl.Points
   let Lines := pl.Lines
   ∀ P Q : α, P ∈ Points → Q ∈ Points → P ≠ Q → ∃! (l : List α), l ∈ Lines ∧ P ∈ l ∧ Q ∈ l
 
 /- Given a line l and a point P not on l, there is a unique line m which is parallel to l
    and which passes through P-/
-def axiom2 (pl : PointsAndLines α) : Prop :=
+def affine_axiom2 (pl : PointsAndLines α) : Prop :=
   let Points := pl.Points
   let Lines := pl.Lines
   ∀ L: List α, ∀ P : α,  (h: L ∈ Lines) → P ∈ Points → P ∉ L →
   ∃! m, m ∈ Lines ∧ P ∈ m ∧ parallel L m pl
 
 /- There exists three non-collinear points -/
-def axiom3 (pl : PointsAndLines α) : Prop :=
+def affine_axiom3 (pl : PointsAndLines α) : Prop :=
   let Points := pl.Points
   ∃ P Q R : α, P ∈ Points ∧ Q ∈ Points ∧ R ∈ Points ∧ ¬collinear P Q R pl
 
 def IsAffinePlane (pl : PointsAndLines α) : Prop :=
-  axiom1 pl ∧ axiom2 pl ∧ axiom3 pl
+  affine_axiom1 pl ∧ affine_axiom2 pl ∧ affine_axiom3 pl
 
 structure AffinePlane (α : Type) [DecidableEq α]
   where
@@ -154,7 +156,7 @@ def check_collinear (plane : PointsAndLines α) (P Q R : α) : Bool :=
 /- COMPUTING WITH THE AXIOMS -/
 
 
-def check_axiom1 (plane : PointsAndLines α) : Bool :=
+def check_affine_axiom1 (plane : PointsAndLines α) : Bool :=
     let PointPairs := List.product plane.Points plane.Points
     let ValidPairs := PointPairs.filter (fun pair => pair.1 ≠ pair.2)
     let lmd := (fun pair : (α × α) =>
@@ -164,7 +166,7 @@ def check_axiom1 (plane : PointsAndLines α) : Bool :=
       LinesWithPQ.length = 1) -- returns true if there is a unique line through P and Q
     List.all ValidPairs lmd
 
-def check_axiom2 (plane : PointsAndLines α) :Bool :=
+def check_affine_axiom2 (plane : PointsAndLines α) :Bool :=
     let lmd := (fun L : List α =>
       let PointsNotOnL := plane.Points.filter (fun P => not (P ∈ L))
       let lmd2 := (fun P : α =>
@@ -174,8 +176,8 @@ def check_axiom2 (plane : PointsAndLines α) :Bool :=
       List.all PointsNotOnL lmd2) -- for all points not on L, check there is a unique parallel line
     List.all plane.Lines lmd -- check for all lines
 
-/- Checks whether a PointsAndLines instance satisfies axiom3 -/
-def check_axiom3 (plane : PointsAndLines α) : Bool :=
+/- Checks whether a PointsAndLines instance satisfies affine_axiom3 -/
+def check_affine_axiom3 (plane : PointsAndLines α) : Bool :=
     let Triples := List.product (List.product plane.Points plane.Points) plane.Points
     let lmd := (fun triple : (α × α) × α =>
       not (check_collinear plane triple.1.1 triple.1.2 triple.2))
@@ -183,7 +185,7 @@ def check_axiom3 (plane : PointsAndLines α) : Bool :=
     List.any Triples lmd
 
 def check_affine_plane (plane : PointsAndLines α) : Bool :=
-  check_axiom1 plane ∧ check_axiom2 plane ∧ check_axiom3 plane
+  check_affine_axiom1 plane ∧ check_affine_axiom2 plane ∧ check_affine_axiom3 plane
 
 /- PROOFS OF EQUIVALENCE -/
 
@@ -207,8 +209,10 @@ theorem parallel_equiv (pl : PointsAndLines α) (l1 l2 : List α) :
   simp_all [parallel, check_parallel]
   aesop
 
-theorem axiom1_equiv (pl : PointsAndLines α) : axiom1 pl ↔ check_axiom1 pl := by
-  simp_all only [axiom1, ne_eq, check_axiom1, decide_not, Bool.decide_and, List.all_filter,
+theorem affine_axiom1_equiv (pl : PointsAndLines α) :
+  affine_axiom1 pl ↔ check_affine_axiom1 pl := by
+  simp_all only [affine_axiom1, ne_eq, check_affine_axiom1,
+                decide_not, Bool.decide_and, List.all_filter,
     Bool.not_not, List.all_eq_true, Bool.or_eq_true, decide_eq_true_eq, Prod.forall]
   apply Iff.intro
   { intros h P Q hPQ
@@ -265,8 +269,10 @@ theorem axiom1_equiv (pl : PointsAndLines α) : axiom1 pl ↔ check_axiom1 pl :=
       }
   }
 
-theorem axiom2_equiv (pl : PointsAndLines α) : axiom2 pl ↔ check_axiom2 pl := by
-  simp_all only [axiom2, parallel_equiv, check_axiom2, List.filter_filter, List.all_filter,
+theorem affine_axiom2_equiv (pl : PointsAndLines α) :
+  affine_axiom2 pl ↔ check_affine_axiom2 pl := by
+  simp_all only [affine_axiom2, parallel_equiv, check_affine_axiom2,
+    List.filter_filter, List.all_filter,
     Bool.not_not, List.all_eq_true, Bool.or_eq_true, decide_eq_true_eq]
   apply Iff.intro
   { intro h l1 hl1 P hP
@@ -305,8 +311,9 @@ theorem axiom2_equiv (pl : PointsAndLines α) : axiom2 pl ↔ check_axiom2 pl :=
       }
     }
 
-theorem axiom3_equiv (pl : PointsAndLines α) : axiom3 pl ↔ check_axiom3 pl := by
-  simp_all only [axiom3, check_axiom3, collinear_equiv]
+theorem affine_axiom3_equiv (pl : PointsAndLines α) :
+affine_axiom3 pl ↔ check_affine_axiom3 pl := by
+  simp_all only [affine_axiom3, check_affine_axiom3, collinear_equiv]
   apply Iff.intro
   { simp_all only [Bool.not_eq_true, exists_and_left, List.any_eq_true, Bool.not_eq_eq_eq_not,
     Bool.not_true, Prod.exists, forall_exists_index, and_imp]
@@ -349,4 +356,5 @@ theorem axiom3_equiv (pl : PointsAndLines α) : axiom3 pl ↔ check_axiom3 pl :=
 
 @[simp] theorem IsAffinePlane_equiv (pl : PointsAndLines α) :
   IsAffinePlane pl ↔ check_affine_plane pl := by
-  simp_all [IsAffinePlane, check_affine_plane, axiom1_equiv, axiom2_equiv, axiom3_equiv]
+  simp_all [IsAffinePlane, check_affine_plane,
+  affine_axiom1_equiv, affine_axiom2_equiv, affine_axiom3_equiv]

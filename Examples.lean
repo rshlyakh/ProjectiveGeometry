@@ -1,6 +1,6 @@
 import ProjectiveGeometry
 
-/- EXAMPLES -/
+/- AFFINE PLANE EXAMPLES -/
 
 def FourPointPlane : PointsAndLines Nat :=
   {
@@ -74,3 +74,7 @@ def TwentyFivePointAffinePlane : AffinePlane Nat :=
     pl := TwentyFivePointPlane
     isAffine := by simp+decide
   }
+
+/- PROJECTIVE PLANE EXAMPLES -/
+
+/- Fano Plane -/
