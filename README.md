@@ -6,11 +6,11 @@ A simple program that automatically verifies that a given (finite) configuration
 
 We follow Hartshorne's _Foundations of Projective Geometry_. A point is represented as an element of some type; a line is a list of points. An affine plane is a list of points together with a list of lines which satisfy the following three axioms:
 
-Axiom 1: Given two distinct points P and Q, there exists a unique line containing P and Q. 
+**Axiom 1:** Given two distinct points P and Q, there exists a unique line containing P and Q. 
 
-Axiom 2: Given a line l and a point P not on l, there exists a unique line which is parallel to l and contains P.
+**Axiom 2:** Given a line l and a point P not on l, there exists a unique line which is parallel to l and contains P.
 
-Axiom 3: There exist three non-collinear points.
+**Axiom 3:** There exist three non-collinear points.
 
 ## Usage
 
