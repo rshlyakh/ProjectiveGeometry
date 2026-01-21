@@ -3,6 +3,8 @@ import ProjectiveGeometry.Basic
 /- HELPER LIST OPERATIONS-/
 
 variable {α : Type} [DecidableEq α]
+set_option linter.unusedDecidableInType false
+set_option linter.unusedSectionVars false
 
 def List.distinct {α} [DecidableEq α] (l : List α) : Prop :=
   ∀ x ∈ l, x ∉ l.erase x
@@ -52,6 +54,13 @@ l = [a] ↔ a ∈ l ∧ ∀ x ∈ l, x = a ∧ List.distinct l := by
       }
   }
 
+lemma singleton_equal_elems (l : List α) (x y : α) :
+  l.length = 1 → x ∈ l → y ∈ l → x = y := by
+    intro hlen hx hy
+    rw [@List.length_eq_one_iff] at hlen
+    obtain ⟨a, ha⟩ := hlen
+    grind
+
 theorem List.product_mem_iff {α β} (xs: List α) (ys: List β) (a : α) (b : β) :
   (a, b) ∈ List.product xs ys ↔ a ∈ xs ∧ b ∈ ys := by
   induction xs with
@@ -59,8 +68,6 @@ theorem List.product_mem_iff {α β} (xs: List α) (ys: List β) (a : α) (b : �
     simp [List.product]
   | cons x xt ih =>
     simp_all
-
-set_option linter.unusedDecidableInType false
 
 lemma distinct_subset_length_le (l s : List α) :
   s ⊆ l → s.distinct → s.length ≤ l.length := by

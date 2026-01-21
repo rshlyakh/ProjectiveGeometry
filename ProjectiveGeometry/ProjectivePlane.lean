@@ -1,5 +1,6 @@
 import ProjectiveGeometry
 
+/- TO-DO : Fix naming scheme -/
 variable {α : Type} [DecidableEq α]
 
 /- AXIOMS -/

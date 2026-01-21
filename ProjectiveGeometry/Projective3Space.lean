@@ -79,11 +79,6 @@ def check_coplanar (P Q R S : α) (pl : PointsLinesPlanes α) : Bool :=
      else
      pl.Planes.any (fun π => [P, Q, R, S] ⊆ π)
 
-theorem check_coplanar_equiv (P Q R S : α) (pl : PointsLinesPlanes α) :
-  coplanar P Q R S pl ↔ check_coplanar P Q R S pl := by
-    simp [coplanar, check_coplanar]
-
- -- Three non-collinear points P, Q, R lie on a unique plane.
 def check_three_space_axiom2 (pl : PointsLinesPlanes α) : Bool :=
     let triples :=
       List.filter (fun (T : (α × α) × α) => ¬ check_collinear pl.toPointsAndLines T.1.1 T.1.2 T.2 )
@@ -92,12 +87,45 @@ def check_three_space_axiom2 (pl : PointsLinesPlanes α) : Bool :=
     (fun T => (List.filter (fun π => [T.1.1, T.1.2, T.2] ⊆ π) pl.Planes).length = 1)
     List.all triples lmd
 
-/- lemma ExistsUnique_filter (p : α → Bool) (l: List α):
-  ∃! a : α, p a → (List.filter p l).length = 1 := by sorry -/
+def check_three_space_axiom3 (pl : PointsLinesPlanes α) : Bool :=
+  pl.Lines.all (fun l => pl.Planes.all (fun π => ¬ (l ∩ π).isEmpty))
+
+def check_three_space_axiom4 (pl : PointsLinesPlanes α) : Bool :=
+  let pairs := List.product pl.Planes pl.Planes
+  let lmd : (List α × List α) → Bool :=
+    (fun πs => not (List.filter (fun l => l ⊆ (πs.1 ∩ πs.2)) pl.Lines).isEmpty)
+  List.all pairs lmd
+
+def check_three_space_axiom5 (pl : PointsLinesPlanes α) : Bool :=
+  let quadruples :=
+    List.filter (fun (Q : ((α × α) × α) × α) =>
+      ¬ check_coplanar Q.1.1.1 Q.1.1.2 Q.1.2 Q.2 pl &&
+      ¬ check_collinear pl.toPointsAndLines Q.1.1.1 Q.1.1.2 Q.1.2 &&
+      ¬ check_collinear pl.toPointsAndLines Q.1.1.1 Q.1.2 Q.2 &&
+      ¬ check_collinear pl.toPointsAndLines Q.1.1.2 Q.1.2 Q.2)
+    (List.product (List.product (List.product pl.Points pl.Points) pl.Points) pl.Points)
+  not quadruples.isEmpty
+
+def check_IsProjective3Space (pl : PointsLinesPlanes α) : Bool :=
+  check_affine_axiom1 pl.toPointsAndLines
+  ∧ check_three_space_axiom2 pl
+  ∧ check_three_space_axiom3 pl
+  ∧ check_three_space_axiom4 pl
+  ∧ check_three_space_axiom5 pl
+  ∧ check_projective_axiom4 pl.toPointsAndLines
+
+/- PROOFS OF EQUIVALENCE -/
+
+theorem check_coplanar_equiv (P Q R S : α) (pl : PointsLinesPlanes α) :
+  coplanar P Q R S pl ↔ check_coplanar P Q R S pl := by
+    simp [coplanar, check_coplanar]
 
 theorem three_space_axiom2_equiv (pl: PointsLinesPlanes α) :
   three_space_axiom2 pl ↔ check_three_space_axiom2 pl := by
-    simp [three_space_axiom2, check_three_space_axiom2]
+    simp only [three_space_axiom2, List.cons_subset, List.nil_subset, and_true,
+      check_three_space_axiom2, Bool.not_eq_true, Bool.decide_eq_false, Bool.decide_and,
+      List.all_filter, Bool.not_not, List.all_eq_true, Bool.or_eq_true, decide_eq_true_eq,
+      Prod.forall, List.pair_mem_product, and_imp]
     apply Iff.intro
     { intros h P Q R hP hQ hR
       by_cases hcol: collinear P Q R pl.toPointsAndLines
@@ -132,12 +160,35 @@ theorem three_space_axiom2_equiv (pl: PointsLinesPlanes α) :
         obtain ⟨π, hπ⟩ := h2
         simp only [ExistsUnique, and_imp]
         apply Exists.intro π
-        simp_all [l]
+        simp_all only [List.mem_filter, Bool.and_eq_true, decide_eq_true_eq, and_self, true_and, l]
         intro y hy hPy hQy hRy
         have y_in: y ∈ l := by grind
-        have h3: ∃ u, l = [u] := by
-          rw [← @List.length_eq_one_iff]
-          aesop
-        
-        sorry
+        apply singleton_equal_elems l y π
+        {assumption}
+        {assumption}
+        {simp_all only [List.mem_filter, decide_true, Bool.and_self, and_self, l]}
     }
+
+theorem three_space_axiom3_equiv (pl : PointsLinesPlanes α) :
+  three_space_axiom3 pl ↔ check_three_space_axiom3 pl := by
+    simp [three_space_axiom3, check_three_space_axiom3]
+
+theorem three_space_axiom4_equiv (pl : PointsLinesPlanes α) :
+  three_space_axiom4 pl ↔ check_three_space_axiom4 pl := by
+    simp [three_space_axiom4, check_three_space_axiom4]
+    grind
+
+theorem three_space_axiom5_equiv (pl : PointsLinesPlanes α) :
+  three_space_axiom5 pl ↔ check_three_space_axiom5 pl := by
+    simp [three_space_axiom5, check_three_space_axiom5]
+    apply Iff.intro
+    /- Should be a straightforward but tedious proof, will do when there is time -/
+    { sorry }
+    { sorry }
+
+theorem IsProjective3Space_equiv (pl : PointsLinesPlanes α) :
+  IsProjective3Space pl ↔ check_IsProjective3Space pl := by
+    simp [IsProjective3Space, check_IsProjective3Space,
+      affine_axiom1_equiv, three_space_axiom2_equiv,
+      three_space_axiom3_equiv, three_space_axiom4_equiv,
+      three_space_axiom5_equiv, check_projective_axiom4_equiv]
