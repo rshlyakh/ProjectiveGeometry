@@ -144,7 +144,7 @@ theorem three_space_axiom2_equiv (pl: PointsLinesPlanes α) :
         rw [@List.length_eq_one_iff]
         apply Exists.intro π
         rw [List.singleton_mem]
-        simp [l, π_in, distinct]
+        simp [l, π_in]
         aesop
       }
     }
@@ -183,7 +183,6 @@ theorem three_space_axiom5_equiv (pl : PointsLinesPlanes α) :
   three_space_axiom5 pl ↔ check_three_space_axiom5 pl := by
     simp [three_space_axiom5, check_three_space_axiom5]
     apply Iff.intro
-    /- Should be a straightforward but tedious proof, will do when there is time -/
     { intro h
       obtain ⟨P, hP⟩ := h
       obtain ⟨Q, hQ⟩ := hP.right

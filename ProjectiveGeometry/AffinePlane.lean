@@ -19,7 +19,7 @@ def parallel (l1 l2 : List α) (pl : PointsAndLines α) : Prop :=
   l1 ∈ pl.Lines ∧ l2 ∈ pl.Lines ∧ (l1 = l2 ∨ (¬ ∃ P : α, P ∈ pl.Points ∧ P ∈ l1 ∧ P ∈ l2))
 
 def collinear (P Q R : α) (pl : PointsAndLines α) : Prop :=
-P ∈ pl.Points ∧ Q ∈ pl.Points ∧ R ∈ pl.Points ∧ P ≠ Q ∧ Q ≠ R ∧ P ≠ R
+P ∈ pl.Points ∧ Q ∈ pl.Points ∧ R ∈ pl.Points
 ∧ ∃ l : List α, l ∈ pl.Lines ∧ P ∈ l ∧ Q ∈ l ∧ R ∈ l
 
 /- AXIOMS -/
@@ -46,7 +46,7 @@ def affine_axiom3 (pl : PointsAndLines α) : Prop :=
 def IsAffinePlane (pl : PointsAndLines α) : Prop :=
   affine_axiom1 pl ∧ affine_axiom2 pl ∧ affine_axiom3 pl
 
-structure AffinePlane (α : Type) [DecidableEq α] extends PointsAndLines α
+structure AffinePlane (α : Type) [DecidableEq α]
   where
   (pl : PointsAndLines α)
   (isAffine : IsAffinePlane pl)
@@ -68,7 +68,8 @@ def check_parallel (plane : PointsAndLines α) (l1 l2 : List α) : Bool :=
 
 /- Checks whether three points are collinear-/
 def check_collinear (plane : PointsAndLines α) (P Q R : α) : Bool :=
-  if not (P ∈ plane.Points ∧ Q ∈ plane.Points ∧ R ∈ plane.Points ∧ P ≠ Q ∧ Q ≠ R ∧ P ≠ R) then
+  if not (P ∈ plane.Points ∧ Q ∈ plane.Points ∧ R ∈ plane.Points)
+  then
     false
   else
     let LinesWithPQR := plane.Lines.filter (fun l => P ∈ l ∧ Q ∈ l ∧ R ∈ l)
@@ -110,7 +111,7 @@ def check_affine_plane (plane : PointsAndLines α) : Bool :=
 
 /- PROOFS OF EQUIVALENCE -/
 
-theorem distinct_equiv (l : List α) :
+@[simp] theorem distinct_equiv (l : List α) :
   List.distinct l ↔ check_distinct l := by
   simp [List.distinct, check_distinct]
 
@@ -118,7 +119,7 @@ theorem distinct_equiv (l : List α) :
   IsDistinct Points Lines ↔
   (check_distinct Points ∧ check_distinct Lines ∧
     ∀ l ∈ Lines, check_distinct l) := by
-  simp [IsDistinct, distinct_equiv]
+  simp [IsDistinct]
 
 theorem collinear_equiv (pl : PointsAndLines α) (P Q R : α) :
   collinear P Q R pl ↔ check_collinear pl P Q R := by

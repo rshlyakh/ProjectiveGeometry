@@ -1,5 +1,6 @@
 import ProjectiveGeometry
 import ProjectiveGeometry.ProjectivePlane
+import ProjectiveGeometry.Projective3Space
 
 /- AFFINE PLANE EXAMPLES -/
 
@@ -151,3 +152,36 @@ def TwentyOnePointProjectivePlane : ProjectivePlane Nat :=
     pl := TwentyOnePointPlane
     isProjective := by simp +decide
   }
+
+/- PROJECTIVE 3-SPACE EXAMPLES -/
+
+def PG32 : PointsLinesPlanes Nat :=
+  {
+    Points := [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+    Lines := [[1,2,3],[1,4,5],[1,6,7],[1,8,9],[1,10,11],[1,12,13],[1,14,15],
+ [2,4,6],[2,5,7],[2,8,10],[2,9,11],[2,12,14],[2,13,15],
+ [3,4,7],[3,5,6],[3,8,11],[3,9,10],[3,12,15],[3,13,14],
+ [4,8,12],[4,9,13],[4,10,14],[4,11,15],
+ [5,8,13],[5,9,12],[5,10,15],[5,11,14],
+ [6,8,14],[6,9,15],[6,10,12],[6,11,13],
+ [7,8,15],[7,9,14],[7,10,13],[7,11,12]]
+    Planes := [[1,2,3,4,5,6,7],
+ [1,2,3,8,9,10,11],
+ [1,2,3,12,13,14,15],
+ [1,4,5,8,9,12,13],
+ [1,4,5,10,11,14,15],
+ [1,6,7,8,9,14,15],
+ [1,6,7,10,11,12,13],
+ [2,4,6,8,10,12,14],
+ [2,4,6,9,11,13,15],
+ [2,5,7,8,10,13,15],
+ [2,5,7,9,11,12,14],
+ [3,4,7,8,11,12,15],
+ [3,4,7,9,10,13,14],
+ [3,5,6,8,11,13,14],
+ [3,5,6,9,10,12,15]]
+    h := by simp +decide
+    hP := by simp +decide
+  }
+
+#eval check_IsProjective3Space PG32

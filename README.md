@@ -4,9 +4,7 @@ A simple program that automatically verifies that a given (finite) configuration
 
 ## Code Structure
 
-The program for checking whether a given object is an affine plane and the equivalence proofs are contained in `ProjectiveGeometry/AffinePlane.lean`. The program for checking whether a given object is a projective plane and the equivalence proofs are contained in `ProjectiveGeometry/ProjectivePlane.lean`. Examples are located in `ProjectiveGeometry/Examples.lean`. 
-
-The code in `ProjectiveGeometry/Projective3Space.lean` is currently under construction.
+The program for checking whether a given object is an affine plane and the equivalence proofs are contained in `ProjectiveGeometry/AffinePlane.lean`. The program for checking whether a given object is a projective plane and the equivalence proofs are contained in `ProjectiveGeometry/ProjectivePlane.lean`. The program for checking whether a given object is a projective 3-space and the equivalence proofs are located in `ProjectiveGeometry/Projective3Space.lean`. Examples are located in `ProjectiveGeometry/Examples.lean`. 
 
 ## Definitions
 
@@ -32,7 +30,7 @@ A _projective plane_ is a list of points together with a list of lists which sat
 
 ## Details & Usage
 
-In this development, the axioms of affine and projective planes are first stated formally. Then, for each axiom, a function is written that takes in a "PointsAndLines" structure and _computes_ whether or not the axiom holds for this structure. Equivalence is then proved between the abstract definitions of the axioms and the computable functions that check their validity. That is, we prove that for any `PointsAndLines` structure, a given axiom holds if and only if the corresponding computable function outputs "true" on this structure.
+In this development, the axioms of affine and projective planes are first stated formally. Then, for each axiom, a function is written that takes in a `PointsAndLines` structure (or `PointsLinesPlanes`, for projective 3-space) and _computes_ whether or not the axiom holds for this structure. Equivalence is then proved between the abstract definitions of the axioms and the computable functions that check their validity. That is, we prove that for any `PointsAndLines` or `PointsLinesPlanes` structure, a given axiom holds if and only if the corresponding computable function outputs "true" on this structure.
 
 To use this program, the user should define an instance of the `PointsAndLines` structure, which consists of Points (a list), Lines (a list of lists), and a proof that all inputted points and lines are distinct. This latter proof can (generally) be written in one step via `by simp +decide` (provied that the recursion depth for `decide` is set high enough). To check that this instance is an affine plane, use `#eval check_affine_plane [your instance]`. Similarly, to check that this instance is a projective plane, use `#eval check_projective_plane [your instance]`.  
 
