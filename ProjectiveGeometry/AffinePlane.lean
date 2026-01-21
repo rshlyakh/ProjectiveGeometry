@@ -40,8 +40,10 @@ def affine_axiom2 (pl : PointsAndLines α) : Prop :=
 
 /- There exists three non-collinear points -/
 def affine_axiom3 (pl : PointsAndLines α) : Prop :=
-  let Points := pl.Points
-  ∃ P Q R : α, P ∈ Points ∧ Q ∈ Points ∧ R ∈ Points ∧ ¬collinear P Q R pl
+
+  ∃ P Q R : α, P ∈ pl.Points ∧ Q ∈ pl.Points ∧ R ∈ pl.Points
+   ∧ ¬collinear P Q R pl
+   ∧ List.distinct [P, Q, R]
 
 def IsAffinePlane (pl : PointsAndLines α) : Prop :=
   affine_axiom1 pl ∧ affine_axiom2 pl ∧ affine_axiom3 pl
@@ -66,7 +68,6 @@ def check_parallel (plane : PointsAndLines α) (l1 l2 : List α) : Bool :=
       let PointsInBoth := plane.Points.filter (fun P => P ∈ l1 ∧ P ∈ l2)
       PointsInBoth.isEmpty
 
-/- Checks whether three points are collinear-/
 def check_collinear (plane : PointsAndLines α) (P Q R : α) : Bool :=
   if not (P ∈ plane.Points ∧ Q ∈ plane.Points ∧ R ∈ plane.Points)
   then
@@ -100,7 +101,8 @@ def check_affine_axiom2 (plane : PointsAndLines α) :Bool :=
 
 /- Checks whether a PointsAndLines instance satisfies affine_axiom3 -/
 def check_affine_axiom3 (plane : PointsAndLines α) : Bool :=
-    let Triples := List.product (List.product plane.Points plane.Points) plane.Points
+    let Triples := List.filter (fun T : (α × α) × α => check_distinct [T.1.1, T.1.2, T.2])
+      (List.product (List.product plane.Points plane.Points) plane.Points)
     let lmd := (fun triple : (α × α) × α =>
       not (check_collinear plane triple.1.1 triple.1.2 triple.2))
       -- returns true if triple is non-collinear
@@ -232,27 +234,41 @@ theorem affine_axiom2_equiv (pl : PointsAndLines α) :
         aesop
       }
     }
+lemma check_collinear_imp_points (pl : PointsAndLines α) (P Q R : α) :
+/- Not used/needed? -/
+  check_collinear pl P Q R  →
+  P ∈ pl.Points ∧ Q ∈ pl.Points ∧ R ∈ pl.Points := by
+  simp only [check_collinear, Bool.decide_and, Bool.not_and, Bool.or_eq_true, Bool.not_eq_eq_eq_not,
+    Bool.not_true, decide_eq_false_iff_not, List.isEmpty_iff, List.filter_eq_nil_iff,
+    Bool.and_eq_true, decide_eq_true_eq, not_and, not_forall, Decidable.not_not,
+    Bool.if_false_left, Bool.decide_or, decide_not, Bool.not_or, Bool.not_not, and_imp,
+    forall_exists_index]
+  intro hP hQ hR _ _ _ _ _
+  exact ⟨hP, hQ, hR⟩
 
 theorem affine_axiom3_equiv (pl : PointsAndLines α) :
 affine_axiom3 pl ↔ check_affine_axiom3 pl := by
-  simp_all only [affine_axiom3, check_affine_axiom3, collinear_equiv]
-  apply Iff.intro
-  { simp_all only [Bool.not_eq_true, exists_and_left, List.any_eq_true, Bool.not_eq_eq_eq_not,
+ simp_all only [affine_axiom3, check_affine_axiom3, collinear_equiv, distinct_equiv]
+ apply Iff.intro
+ {  simp_all only [Bool.not_eq_true, exists_and_left, List.any_eq_true, Bool.not_eq_eq_eq_not,
     Bool.not_true, Prod.exists, forall_exists_index, and_imp]
-    intros P hP Q hQ R hR hcol
+    intros P hP Q hQ R hR hcol hdist
     apply Exists.intro P
     apply Exists.intro Q
     apply Exists.intro R
     constructor
     {
-      simp only [List.product_mem_iff]
+      simp only [List.mem_filter, List.pair_mem_product]
       constructor
-      { exact ⟨hP, hQ⟩ }
-      { exact hR}
+      { constructor
+        {exact ⟨hP, hQ⟩ }
+        {exact hR }
+      }
+      { assumption }
     }
     { exact hcol}
   }
-  {
+ {
     intros h
     simp only [List.any_eq_true, Bool.not_eq_eq_eq_not, Bool.not_true, Prod.exists] at h
     obtain ⟨P, hP⟩ := h
@@ -262,18 +278,11 @@ affine_axiom3 pl ↔ check_affine_axiom3 pl := by
     apply Exists.intro Q
     apply Exists.intro R
     constructor
-    { simp only [List.product_mem_iff] at hR
-      aesop
+    {
+      simp_all only [List.mem_filter, List.pair_mem_product]
     }
-    { simp only [List.product_mem_iff] at hR
-      constructor
-      { exact hR.left.left.right}
-      { constructor
-        {
-          exact hR.left.right}
-        { simp only [Bool.not_eq_true]; exact hR.right}
-      }
-    }
+    { simp_all only [List.mem_filter, List.pair_mem_product, Bool.false_eq_true, not_false_eq_true,
+      and_self]}
   }
 
 @[simp] theorem IsAffinePlane_equiv (pl : PointsAndLines α) :
