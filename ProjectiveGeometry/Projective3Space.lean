@@ -1,6 +1,6 @@
 import ProjectiveGeometry.ProjectivePlane
 
-/- UNDER CONSTRUCTION -/
+set_option linter.flexible false
 
 /- Q: should add a flag to check_collinear/coplanar, to check if points are Points? -/
 variable {α : Type} [DecidableEq α]
@@ -49,7 +49,7 @@ def three_space_axiom5 (pl : PointsLinesPlanes α) : Prop :=
   ¬ coplanar P Q R S pl
   ∧ ¬ collinear P Q R pl.toPointsAndLines
   ∧ ¬ collinear P Q S pl.toPointsAndLines
-  ∧ ¬ collinear P S R pl.toPointsAndLines
+  ∧ ¬ collinear P R S pl.toPointsAndLines
   ∧ ¬ collinear Q R S pl.toPointsAndLines
 
 /- Axiom 6: Every line has at least three points.
@@ -101,6 +101,7 @@ def check_three_space_axiom5 (pl : PointsLinesPlanes α) : Bool :=
     List.filter (fun (Q : ((α × α) × α) × α) =>
       ¬ check_coplanar Q.1.1.1 Q.1.1.2 Q.1.2 Q.2 pl &&
       ¬ check_collinear pl.toPointsAndLines Q.1.1.1 Q.1.1.2 Q.1.2 &&
+      ¬ check_collinear pl.toPointsAndLines Q.1.1.1 Q.1.1.2 Q.2 &&
       ¬ check_collinear pl.toPointsAndLines Q.1.1.1 Q.1.2 Q.2 &&
       ¬ check_collinear pl.toPointsAndLines Q.1.1.2 Q.1.2 Q.2)
     (List.product (List.product (List.product pl.Points pl.Points) pl.Points) pl.Points)
@@ -183,8 +184,57 @@ theorem three_space_axiom5_equiv (pl : PointsLinesPlanes α) :
     simp [three_space_axiom5, check_three_space_axiom5]
     apply Iff.intro
     /- Should be a straightforward but tedious proof, will do when there is time -/
-    { sorry }
-    { sorry }
+    { intro h
+      obtain ⟨P, hP⟩ := h
+      obtain ⟨Q, hQ⟩ := hP.right
+      obtain ⟨R, hR⟩ := hQ.right
+      obtain ⟨S, hS⟩ := hR.right
+      apply Exists.intro P
+      constructor
+      {exact hP.left}
+      {apply Exists.intro Q
+       constructor
+       {exact hQ.left}
+       {
+        apply Exists.intro R
+        constructor
+        {exact hR.left}
+        { apply Exists.intro S
+          constructor
+          {exact hS.left}
+          {
+            simp_all [collinear_equiv, check_coplanar_equiv]
+          }
+        }
+       }
+      }
+    }
+    {
+      intro h
+      obtain ⟨P, hP⟩ := h
+      obtain ⟨Q, hQ⟩ := hP.right
+      obtain ⟨R, hR⟩ := hQ.right
+      obtain ⟨S, hS⟩ := hR.right
+      apply Exists.intro P
+      constructor
+      {exact hP.left}
+      {apply Exists.intro Q
+       constructor
+       {exact hQ.left}
+       {
+          apply Exists.intro R
+          constructor
+          {exact hR.left}
+          { apply Exists.intro S
+            constructor
+            {exact hS.left}
+            {
+              simp_all [collinear_equiv, check_coplanar_equiv]
+            }
+          }
+        }
+     }
+    }
 
 theorem IsProjective3Space_equiv (pl : PointsLinesPlanes α) :
   IsProjective3Space pl ↔ check_IsProjective3Space pl := by
