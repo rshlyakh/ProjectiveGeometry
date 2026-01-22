@@ -1,6 +1,6 @@
 # Projective Geometry
 
-A simple program that automatically verifies that a given (finite) configuration of points and lines is an affine plane or a projective plane.
+A simple program capable of automatically verifying that a given (finite) configuration of points and lines is an affine plane, projective plane, or a projective 3-space.
 
 ## Code Structure
 
