@@ -90,9 +90,13 @@ def FanoPlaneProjective : ProjectivePlane Nat :=
 
 For additional examples, see the `Examples.lean` file.
 
-## Future Work
+## Issues/Future Work
 
 The programs were written in a way that would make reasoning about them as easy as possible, with no attempt made to optimize for efficiency. In some cases, this leads to unecessary computations.
+
+For example, one improvement would be to add flags to the helper coplanarity and collinearity checking functions so that verifying whether `α` terms are points is optional, in case this is checked elsewhere in the main function.
+
+The naming scheme is inconsistent and not in proper Lean style.
 
 ## Acknowledgements
 Examples of finite affine and projective planes were drawn from: [Finite Plane Examples](https://web.york.cuny.edu/~malk/mycourses/math244/finite-plane-examples.html)

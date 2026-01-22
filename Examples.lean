@@ -156,6 +156,7 @@ def TwentyOnePointProjectivePlane : ProjectivePlane Nat :=
 /- PROJECTIVE 3-SPACE EXAMPLES -/
 
 def PG32 : PointsLinesPlanes Nat :=
+  /- This is the smallest projective 3-space. -/
   {
     Points := [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
     Lines := [[1,2,3],[1,4,5],[1,6,7],[1,8,9],[1,10,11],[1,12,13],[1,14,15],

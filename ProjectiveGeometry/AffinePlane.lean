@@ -40,7 +40,6 @@ def affine_axiom2 (pl : PointsAndLines α) : Prop :=
 
 /- There exists three non-collinear points -/
 def affine_axiom3 (pl : PointsAndLines α) : Prop :=
-
   ∃ P Q R : α, P ∈ pl.Points ∧ Q ∈ pl.Points ∧ R ∈ pl.Points
    ∧ ¬collinear P Q R pl
    ∧ List.distinct [P, Q, R]

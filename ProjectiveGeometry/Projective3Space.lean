@@ -2,7 +2,6 @@ import ProjectiveGeometry.ProjectivePlane
 
 set_option linter.flexible false
 
-/- Q: should add a flag to check_collinear/coplanar, to check if points are Points? -/
 variable {α : Type} [DecidableEq α]
 
 /- BASIC DEFINITIONS -/
@@ -13,7 +12,6 @@ where
 (hP: Planes.distinct)
 
 def coplanar [DecidableEq α] (P Q R S : α) (pl : PointsLinesPlanes α) : Prop :=
-  /- Issue with distinct points -/
   [P, Q, R, S] ⊆ pl.Points ∧ ∃ π ∈ pl.Planes, [P, Q, R, S] ⊆ π
 
 /- AXIOMS -/
@@ -45,6 +43,7 @@ def three_space_axiom4 (pl : PointsLinesPlanes α) : Prop :=
 /- Axiom 5: There exist four noncoplanar points, no three of which are collinear. -/
 
 def three_space_axiom5 (pl : PointsLinesPlanes α) : Prop :=
+  -- note that it's not necesary to check distinctess, as this would be caught by collinearity
   ∃ P ∈ pl.Points, ∃ Q ∈ pl.Points, ∃ R ∈ pl.Points, ∃ S ∈ pl.Points,
   ¬ coplanar P Q R S pl
   ∧ ¬ collinear P Q R pl.toPointsAndLines
@@ -121,7 +120,7 @@ theorem check_coplanar_equiv (P Q R S : α) (pl : PointsLinesPlanes α) :
   coplanar P Q R S pl ↔ check_coplanar P Q R S pl := by
     simp [coplanar, check_coplanar]
 
-theorem three_space_axiom2_equiv (pl: PointsLinesPlanes α) :
+theorem three_space_axiom2_equiv (pl : PointsLinesPlanes α) :
   three_space_axiom2 pl ↔ check_three_space_axiom2 pl := by
     simp only [three_space_axiom2, List.cons_subset, List.nil_subset, and_true,
       check_three_space_axiom2, Bool.not_eq_true, Bool.decide_eq_false, Bool.decide_and,
