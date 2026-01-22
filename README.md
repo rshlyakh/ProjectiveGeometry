@@ -40,6 +40,8 @@ A _projective 3-space_ is a list of points, together with a list of lines and a 
 
 **Axiom 5:** There exist four noncoplanar points, no three of which are collinear.
 
+**Axiom 6:** Every line has at least three points.
+
 ## Details & Usage
 
 In this development, the axioms of affine and projective planes are first stated formally. Then, for each axiom, a function is written that takes in a `PointsAndLines` structure (or `PointsLinesPlanes`, for projective 3-space) and _computes_ whether or not the axiom holds for this structure. Equivalence is then proved between the abstract definitions of the axioms and the computable functions that check their validity. That is, we prove that for any `PointsAndLines` or `PointsLinesPlanes` structure, a given axiom holds if and only if the corresponding computable function outputs "true" on this structure.
