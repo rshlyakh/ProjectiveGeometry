@@ -5,7 +5,7 @@ import ProjectiveGeometry.Projective3Space
 /- AFFINE PLANE EXAMPLES -/
 
 def FourPointPlane : PointsAndLines Nat :=
-  /- here, nats are used for points names, but any type with decidable equality could be used -/
+  /- here, nats are used for point names, but any type with decidable equality could be used -/
   {
     Points := [1, 2, 3, 4]
     Lines := [ [1,2], [3,4], [1,3], [2,4], [1,4], [2,3] ]
