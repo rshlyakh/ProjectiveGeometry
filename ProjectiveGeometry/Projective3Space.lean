@@ -234,7 +234,7 @@ theorem three_space_axiom5_equiv (pl : PointsLinesPlanes α) :
      }
     }
 
-theorem IsProjective3Space_equiv (pl : PointsLinesPlanes α) :
+@[simp] theorem IsProjective3Space_equiv (pl : PointsLinesPlanes α) :
   IsProjective3Space pl ↔ check_IsProjective3Space pl := by
     simp [IsProjective3Space, check_IsProjective3Space,
       affine_axiom1_equiv, three_space_axiom2_equiv,

@@ -186,3 +186,15 @@ def PG32 : PointsLinesPlanes Nat :=
   }
 
 #eval check_IsProjective3Space PG32
+
+set_option linter.style.nativeDecide false
+-- set_option maxHeartbeats 1000000 in
+
+
+def PG32Space : Projective3Space Nat :=
+  {
+    pl := PG32
+    is3Space := by
+      simp only [IsProjective3Space_equiv]
+      decide +native -- native_decide could also be used here (they are synonyms)
+  }
