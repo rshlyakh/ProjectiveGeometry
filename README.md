@@ -8,7 +8,7 @@ The program for checking whether a given object is an affine plane and the equiv
 
 ## Definitions
 
-We follow the formulation in Hartshorne's _Foundations of Projective Geometry_. We represent a point as a term of some type; a line is represented as a list of points. 
+We follow the formulation in Hartshorne's _Foundations of Projective Geometry_. We represent a point as a term of some type; lines and planes are both represented as a list of points. 
 
 An _affine plane_ is a list of points together with a list of lines that satisfy the following three axioms:
 
@@ -52,8 +52,9 @@ To use this program, the user should do the following:
 
 2. For projective 3-spaces, define an instance of the `PointsLinesPlanes` structure, which consists of Points and Lines (as above), Planes (a list of lists), a proof that all inputted points and lines are distinct, and a separate proof that all planes are distinct. Again, these proofs can be done in a single line using `by simp +decide`. For checking, use `#eval check_IsProjective3Space [your instance]`.
 
-Affine planes, projective planes, and projective 3-spaces can also be instantiated in the respective `AffinePlane`, `ProjectivePlane`, and `Projective3Space` structures; the proof that the axioms hold can (generally) be written in one step via `by simp +decide`, provided that the recursion depth for `decide` is set high enough.
+Affine planes, projective planes, and projective 3-spaces can also be instantiated in the respective `AffinePlane`, `ProjectivePlane`, and `Projective3Space` structures; the proof that the axioms hold can (generally) be written in one step via `by simp +decide`, provided that the recursion depth for `decide` is set high enough. 
 
+For larger objects, it is more efficient to use `by simp; decide +native` rather than `by simp +decide`, but [requires trusting Lean's built-in `#eval` compiler](https://lean-lang.org/doc/reference/latest/Tactic-Proofs/Tactic-Reference/#decide). 
 ## Examples:
 
 ```
@@ -99,8 +100,6 @@ The programs were written in a way that would make reasoning about them as easy 
 For example, one improvement would be to add flags to the helper coplanarity and collinearity checking functions so that verifying whether `α` terms are points is optional, in case this is checked elsewhere in the main function.
 
 The naming scheme is inconsistent and not in proper Lean style.
-
-Currently, the 'decide' tactic does not seem sufficient for larger examples. I am trying to diagnose the issue and look for alternatives. 
 
 ## Acknowledgements
 Examples of finite affine and projective planes were drawn from: [Finite Plane Examples](https://web.york.cuny.edu/~malk/mycourses/math244/finite-plane-examples.html)
